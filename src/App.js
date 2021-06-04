@@ -1,17 +1,39 @@
 import { useState, useEffect } from "react";
 import data from "./data.json";
-import "./App.css";
 import Products from "./components/products";
 import Filter from "./components/filter";
+import Cart from "./components/cart";
+import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
 
   useEffect(() => {
     setProducts(data.products);
   }, []);
+
+  const removeFromCart = (product) => {
+    const localCartItems = [...cartItems];
+    setCartItems(localCartItems.filter((item) => item._id !== product._id));
+  };
+
+  const addToCart = (product) => {
+    const localCartItems = [...cartItems];
+    let alreadyInCart = false;
+    localCartItems.forEach((item) => {
+      if (item._id === product._id) {
+        item.count++;
+        alreadyInCart = true;
+      }
+    });
+    if (!alreadyInCart) {
+      localCartItems.push({ ...product, count: 1 });
+    }
+    setCartItems(localCartItems);
+  };
 
   const filterProducts = (event) => {
     if (event.target.value === "") {
@@ -63,9 +85,11 @@ function App() {
               filterProducts={filterProducts}
               sortProducts={sortProducts}
             />
-            <Products products={products} />
+            <Products products={products} addToCart={addToCart} />
           </div>
-          <div className="sidebar">cart items</div>
+          <div className="sidebar">
+            <Cart cartItems={cartItems} removeFromCart={removeFromCart} />
+          </div>
         </div>
       </main>
       <footer>All rights is reserved</footer>
