@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
-import data from "./data.json";
 import Products from "./components/products";
 import Filter from "./components/filter";
 import Cart from "./components/cart";
+import data from "./data.json";
 import "./App.css";
 
+import { fetchProducts, getProducts } from "./store/products";
+import { useDispatch, useSelector } from "react-redux";
+
 function App() {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const products = useSelector(getProducts());
+  const [products2, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState(
     localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems"))
@@ -16,8 +21,9 @@ function App() {
   const [sort, setSort] = useState("");
 
   useEffect(() => {
-    setProducts(data.products);
-  }, []);
+    dispatch(fetchProducts(data.products));
+    // setProducts(productsRedux);
+  }, [dispatch]);
 
   const createOrder = (order) => {
     alert("Need to save order for " + order.name);
