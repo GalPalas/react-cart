@@ -1,28 +1,22 @@
 import { useState, useEffect } from "react";
+import { fetchProducts } from "./store/products";
+import { useDispatch } from "react-redux";
 import Products from "./components/products";
 import Filter from "./components/filter";
 import Cart from "./components/cart";
 import data from "./data.json";
 import "./App.css";
 
-import { fetchProducts, getProducts } from "./store/products";
-import { useDispatch, useSelector } from "react-redux";
-
 function App() {
   const dispatch = useDispatch();
-  const products = useSelector(getProducts());
-  const [products2, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState(
     localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems"))
       : []
   );
-  const [size, setSize] = useState("");
-  const [sort, setSort] = useState("");
 
   useEffect(() => {
     dispatch(fetchProducts(data.products));
-    // setProducts(productsRedux);
   }, [dispatch]);
 
   const createOrder = (order) => {
@@ -54,40 +48,27 @@ function App() {
     localStorage.setItem("cartItems", JSON.stringify(localCartItems));
   };
 
-  const filterProducts = (event) => {
-    if (event.target.value === "") {
-      setProducts(data.products);
-      setSize(event.target.value);
-    } else {
-      const filter = products.filter(
-        (product) => product.availableSizes.indexOf(event.target.value) >= 0
-      );
-      setProducts(filter);
-      setSize(event.target.value);
-    }
-  };
+  // const sortProducts = (event) => {
+  // const sort = event.target.value;
 
-  const sortProducts = (event) => {
-    const sort = event.target.value;
-
-    const sortBy = products
-      .slice()
-      .sort((a, b) =>
-        sort === "lowest"
-          ? a.price > b.price
-            ? 1
-            : -1
-          : sort === "highest"
-          ? a.price < b.price
-            ? 1
-            : -1
-          : a._id > b._id
-          ? 1
-          : -1
-      );
-    setSort(sort);
-    setProducts(sortBy);
-  };
+  // const sortBy = products
+  //   .slice()
+  //   .sort((a, b) =>
+  //     sort === "lowest"
+  //       ? a.price > b.price
+  //         ? 1
+  //         : -1
+  //       : sort === "highest"
+  //       ? a.price < b.price
+  //         ? 1
+  //         : -1
+  //       : a._id > b._id
+  //       ? 1
+  //       : -1
+  //   );
+  // setSort(sort);
+  // setProducts(sortBy);
+  // };
 
   return (
     <div className="grid-container">
@@ -97,14 +78,8 @@ function App() {
       <main>
         <div className="content">
           <div className="main">
-            <Filter
-              count={products.length}
-              size={size}
-              sort={sort}
-              filterProducts={filterProducts}
-              sortProducts={sortProducts}
-            />
-            <Products products={products} addToCart={addToCart} />
+            <Filter /*sort={sort} sortProducts={sortProducts}*/ />
+            <Products addToCart={addToCart} />
           </div>
           <div className="sidebar">
             <Cart

@@ -1,9 +1,16 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getFilterdProducts, filterProductsBySize } from "../store/products";
 
-function Filter({ count, sort, size, filterProducts, sortProducts }) {
-  return (
+function Filter({ sort, sortProducts }) {
+  const filterProducts = useSelector(getFilterdProducts());
+  const dispatch = useDispatch();
+
+  return !filterProducts ? (
+    <div>Loading... </div>
+  ) : (
     <div className="filter">
-      <div className="filter-result">{count} Products</div>
+      <div className="filter-result">{filterProducts.length} Products</div>
       <div className="filter-sort">
         Order{" "}
         <select value={sort} onChange={sortProducts}>
@@ -14,7 +21,16 @@ function Filter({ count, sort, size, filterProducts, sortProducts }) {
       </div>
       <div className="filter-size">
         Filter{" "}
-        <select value={size} onChange={filterProducts}>
+        <select
+          onChange={(e) =>
+            dispatch(
+              filterProductsBySize({
+                size: e.target.value,
+                data: filterProducts,
+              })
+            )
+          }
+        >
           <option value="">ALL</option>
           <option value="XS">XS</option>
           <option value="S">S</option>
