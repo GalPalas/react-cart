@@ -3,10 +3,12 @@ import formatCurrency from "../utils";
 import Fade from "react-reveal/Fade";
 import Zoom from "react-reveal/Zoom";
 import Modal from "react-modal";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getFilterdProducts } from "../store/products";
+import { addToCart } from "../store/cart";
 
-function Products({ addToCart }) {
+function Products() {
+  const dispatch = useDispatch();
   const filterProducts = useSelector(getFilterdProducts());
 
   // const openModal = (product) => {
@@ -37,7 +39,7 @@ function Products({ addToCart }) {
                 <div className="product-price">
                   <div>{formatCurrency(product.price)}</div>
                   <button
-                    onClick={() => addToCart(product)}
+                    onClick={() => dispatch(addToCart({ product }))}
                     className="button primary"
                   >
                     Add to cart
