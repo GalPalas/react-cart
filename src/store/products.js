@@ -7,6 +7,7 @@ const slice = createSlice({
     items: [],
     filterItems: [],
     size: "",
+    sort: "",
   },
   reducers: {
     fetchProducts: (products, action) => {
@@ -27,10 +28,29 @@ const slice = createSlice({
         products.size = size;
       }
     },
+    filterProductsByPrice: (products, action) => {
+      const { sort } = action.payload;
+
+      if (sort === "latest") {
+        products.filterItems.sort((a, b) => (a._id > b._id ? 1 : -1));
+      } else {
+        products.filterItems.sort((a, b) =>
+          sort === "lowest"
+            ? a.price > b.price
+              ? 1
+              : -1
+            : a.price < b.price
+            ? -1
+            : 1
+        );
+      }
+      products.sort = sort;
+    },
   },
 });
 
-export const { fetchProducts, filterProductsBySize } = slice.actions;
+export const { fetchProducts, filterProductsBySize, filterProductsByPrice } =
+  slice.actions;
 export default slice.reducer;
 
 export const getProducts = () =>

@@ -1,8 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFilterdProducts, filterProductsBySize } from "../store/products";
+import {
+  getFilterdProducts,
+  filterProductsBySize,
+  filterProductsByPrice,
+} from "../store/products";
 
-function Filter({ sort, sortProducts }) {
+function Filter() {
   const filterProducts = useSelector(getFilterdProducts());
   const dispatch = useDispatch();
 
@@ -13,8 +17,16 @@ function Filter({ sort, sortProducts }) {
       <div className="filter-result">{filterProducts.length} Products</div>
       <div className="filter-sort">
         Order{" "}
-        <select value={sort} onChange={sortProducts}>
-          <option>Latest</option>
+        <select
+          onChange={(e) =>
+            dispatch(
+              filterProductsByPrice({
+                sort: e.target.value,
+              })
+            )
+          }
+        >
+          <option value="latest">Latest</option>
           <option value="lowest">Lowest</option>
           <option value="highest">Highest</option>
         </select>
