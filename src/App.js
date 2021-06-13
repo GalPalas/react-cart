@@ -48,28 +48,6 @@ function App() {
     localStorage.setItem("cartItems", JSON.stringify(localCartItems));
   };
 
-  // const sortProducts = (event) => {
-  // const sort = event.target.value;
-
-  // const sortBy = products
-  //   .slice()
-  //   .sort((a, b) =>
-  //     sort === "lowest"
-  //       ? a.price > b.price
-  //         ? 1
-  //         : -1
-  //       : sort === "highest"
-  //       ? a.price < b.price
-  //         ? 1
-  //         : -1
-  //       : a._id > b._id
-  //       ? 1
-  //       : -1
-  //   );
-  // setSort(sort);
-  // setProducts(sortBy);
-  // };
-
   return (
     <div className="grid-container">
       <header>
@@ -78,7 +56,7 @@ function App() {
       <main>
         <div className="content">
           <div className="main">
-            <Filter /*sort={sort} sortProducts={sortProducts}*/ />
+            <Filter />
             <Products addToCart={addToCart} />
           </div>
           <div className="sidebar">
