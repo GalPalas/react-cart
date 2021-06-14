@@ -1,17 +1,24 @@
 import React, { useState } from "react";
-import formatCurrency from "../utils";
+import { formatCurrency, dateBuilder } from "../utils";
 import Fade from "react-reveal/Fade";
+import Modal from "react-modal";
+import Zoom from "react-reveal/Zoom";
 import { useSelector, useDispatch } from "react-redux";
 import { getCartItems, removeFromCart } from "../store/cart";
 
-function Cart({ createOrder }) {
+function Cart() {
   const [showCheckout, setShowCheckout] = useState(false);
+  const [order, setOrder] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
 
   const dispatch = useDispatch();
   const cartItems = useSelector(getCartItems());
+
+  const closeModal = () => {
+    setOrder(null);
+  };
 
   const handleInput = (e) => {
     switch (e.target.name) {
@@ -29,14 +36,16 @@ function Cart({ createOrder }) {
   };
 
   const handleSubmit = (e) => {
+    let lastId = 0;
     e.preventDefault();
     const order = {
+      _id: ++lastId,
       name: name,
       email: email,
       address: address,
       cartItems: cartItems,
     };
-    createOrder(order);
+    setOrder(order);
   };
 
   return (
@@ -139,6 +148,62 @@ function Cart({ createOrder }) {
                     </ul>
                   </form>
                 </Fade>
+                {order && (
+                  <Modal
+                    isOpen={true}
+                    onRequestClose={closeModal}
+                    ariaHideApp={false}
+                  >
+                    <Zoom>
+                      <button className="close-modal" onClick={closeModal}>
+                        X
+                      </button>
+                      <div className="order-details">
+                        <h3 className="success-message">
+                          Your order has been placed.
+                        </h3>
+                        <h2>Order {order._id}</h2>
+                        <ul>
+                          <li>
+                            <div>Name:</div>
+                            <div>{order.name}</div>
+                          </li>
+                          <li>
+                            <div>Email:</div>
+                            <div>{order.email}</div>
+                          </li>
+                          <li>
+                            <div>Address:</div>
+                            <div>{order.address}</div>
+                          </li>
+                          <li>
+                            <div>Date:</div>
+                            <div>{dateBuilder(new Date())}</div>
+                          </li>
+                          <li>
+                            <div>Total:</div>
+                            {formatCurrency(
+                              order.cartItems.reduce(
+                                (a, c) => a + c.price * c.count,
+                                0
+                              )
+                            )}
+                          </li>
+                          <li>
+                            <div>Cart Items:</div>
+                            <div>
+                              {order.cartItems.map((x) => (
+                                <div>
+                                  {x.count} {" x "} {x.title}
+                                </div>
+                              ))}
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </Zoom>
+                  </Modal>
+                )}
               </div>
             )}
           </div>
