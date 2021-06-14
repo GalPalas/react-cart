@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import formatCurrency from "../utils";
+import { formatCurrency } from "../utils";
 import Fade from "react-reveal/Fade";
 import Zoom from "react-reveal/Zoom";
 import Modal from "react-modal";

@@ -14,10 +14,6 @@ function App() {
     dispatch(fetchProducts(data.products));
   }, [dispatch]);
 
-  const createOrder = (order) => {
-    alert("Need to save order for " + order.name);
-  };
-
   return (
     <div className="grid-container">
       <header>
@@ -30,7 +26,7 @@ function App() {
             <Products />
           </div>
           <div className="sidebar">
-            <Cart createOrder={createOrder} />
+            <Cart />
           </div>
         </div>
       </main>
