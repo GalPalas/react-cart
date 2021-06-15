@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { formatCurrency, dateBuilder } from "../utils";
-import Fade from "react-reveal/Fade";
 import Modal from "react-modal";
+import Fade from "react-reveal/Fade";
 import Zoom from "react-reveal/Zoom";
+import { formatCurrency, dateBuilder } from "../utils";
 import { useSelector, useDispatch } from "react-redux";
 import { getCartItems, removeFromCart } from "../store/cart";
+import { create_order } from "../store/order";
 
 function Cart() {
   const [showCheckout, setShowCheckout] = useState(false);
@@ -45,6 +46,7 @@ function Cart() {
       address: address,
       cartItems: cartItems,
     };
+    dispatch(create_order({ orderDetails: order }));
     setOrder(order);
   };
 
