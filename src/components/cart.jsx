@@ -36,10 +36,10 @@ function Cart() {
   };
 
   const handleSubmit = (e) => {
-    let lastId = 0;
+    let lastId = Math.random().toString(36).substr(2, 9);
     e.preventDefault();
     const order = {
-      _id: ++lastId,
+      _id: lastId,
       name: name,
       email: email,
       address: address,
